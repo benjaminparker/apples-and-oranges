@@ -5,16 +5,15 @@ object Checkout {
     "Orange" -> 25
   )
 
+  val offers = List(appleDiscount, orangeDiscount)
+
   def totalCost(items: List[String]): Int = cost(items) - discount(items)
 
-  private def cost(items: List[String]): Int = items.foldLeft(0)(_ + prices(_))
+  def cost(items: List[String]): Int = items.foldLeft(0)(_ + prices(_))
 
-  private def discount(items: List[String]): Int = {
-    val (apples, oranges) = items.partition(_ == "Apple")
-    appleDiscount(apples) + orangeDiscount(oranges)
-  }
+  def discount(items: List[String]): Int = offers.foldLeft(0)((tot, offer) => tot + offer(items))
 
-  private def appleDiscount(apples: List[String]): Int = apples.length / 2 * prices("Apple")
+  def appleDiscount: List[String] => Int = items => items.count(_ == "Apple") / 2 * prices("Apple")
 
-  private def orangeDiscount(oranges: List[String]): Int = oranges.length / 3 * prices("Orange")
+  def orangeDiscount: List[String] => Int = items => items.count(_ == "Orange") / 3 * prices("Orange")
 }
